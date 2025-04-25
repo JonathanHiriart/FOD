@@ -76,4 +76,5 @@ begin
     assing(detalleDiario,'DetalleDiario');
     assing(stockMin,'stock_minimo.txt');
     actualizarMaestro(mae,detalleDiario);
+    agregarListaDeStockMin(stockMinimo,mae);
 end.
