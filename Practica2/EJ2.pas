@@ -28,31 +28,22 @@ type
     maestro=file of producto;
     detalleDiario=file of ventas;
 {Modulos}
-procedure actualizarMaestro(var mae:maestro; var det:detalleDiario; var stockMinimo:Text);
+procedure actualizarMaestro(var mae:maestro; var det:detalleDiario;);
 var 
     rMaestro:producto;
     rDetelle:ventas;
-    seAgrego:boolean;
 begin
     reset(mae);reset(det);
-    seAgrego:=false;
     while(not EOF(det))do begin
         read(mae,rMaestro);
         read(det,rDetelle);
-        while(rMaestro.codProducto<>rDetelle.codProducto)do begin
+        while(rMaestro.codProducto<>rDetelle.codProducto)do 
             read(det,rDetelle);
-            seAgrego:=false;
-        end;
         while(not EOF(det))and (rMaestro.codProducto = rDetelle.codProducto ) do begin
             rMaestro.stockActual:=rMaestro.stockActual- rDetelle.cantUnidadesVendidas;{si son iguales acutalizo el stock}
-            if(rMaestro.stockActual < rMaestro.stockMin)then{si el stock actualizado es menor }
-                if (not seAgrego)then begin
-                    agregarListaDeStockMin(stockMinimo,rMaestro);{inciso B}
-                    seAgrego:=true;
-                end;
             read(det,rDetelle);{avanzo }
         end;    
-        if (not EOF(det))then 
+        if (not EOF(det))then {defazado}
             seek(det,filepos(det)-1);
         seek(mae,filepos(mae)-1);
         write(mae,rMaestro);
@@ -60,13 +51,19 @@ begin
     close(det);
     close(mae);
 end;
-procedure agregarListaDeStockMin(var stockMinimo:Text; var prod:producto;);
+procedure agregarListaDeStockMin(var stockMinimo:Text; var mae:maestro;);
+var
+    rMaestro:producto;
 begin
     reset(stockMinimo);
-    // while(not EOF(stockMinimo))do 
-    //     seek(stockMinimo,filepos(stockMinimo)+1);
-    with prod do 
-        writeln(stockMinimo,codProducto,' ',nombreComercial,' ',precio,' ',stockMin,' ',stockActual);
+    reset(mae);
+    while (not EOF(mae))do begin
+        read(mae,rMaestro);
+        if (rMaestro.stockActual<rMaestro.stockMin)then 
+            with prod do 
+                writeln(stockMinimo,codProducto,' ',nombreComercial,' ',precio,' ',stockMin,' ',stockActual);
+    end;
+    close(mae);
     close(stockMinimo);
 end;
 {Program Principal}
@@ -78,5 +75,5 @@ begin
     assing(mae,'Maestro');
     assing(detalleDiario,'DetalleDiario');
     assing(stockMin,'stock_minimo.txt');
-    actualizarMaestro(mae,detalleDiario,stockMin);
+    actualizarMaestro(mae,detalleDiario);
 end.
