@@ -19,7 +19,7 @@ type
     pedidos =  file of pedido;
 {Procesos}
 
-procedure leerDetalle(var arc:pedidos; rx:pedido);
+procedure leerDetalle(var arc:pedidos;var  rx:pedido);
 begin
     if(not EOF(arc))then
         read(arc,rx);
@@ -56,13 +56,14 @@ begin
     diferencia:=0;
 
     while(min.codProducto<>valorAlto)do begin   
-        totPedido.codProducto:=min.codProducto;
+        totPedido.codProducto := min.codProducto;
+        totPedido.cantPedida := 0;
         while(totPedido.codProducto = min.codProducto) do begin
             totPedido.cantPedida:=  totPedido.cantPedida + min.cantPedida;
             minimo(r1,r2,r3,res1,res2,res3,min);
         end;
         desconte:=false;
-        while(not EOF(a)and (not desconte))do begin
+        while(not EOF(a)) and (not desconte))do begin
             read(a,ra);
             if(ra.codProducto= totPedido.codProducto)then begin
                 if(ra.stockA>=totPedido.cantPedida)then
@@ -73,10 +74,8 @@ begin
                         ra.stockA:=0;
                         writeln('el pedido fue insatifecho faltaron: ',diferencia,' productos');
                     end;
-                if(ra.stockA<ra.stockMin)then begin
-                    seek(faltantes,filezise(faltantes));
-                    write(faltantes,ra.codProducto,ra.categoria);
-                end;
+                if(ra.stockA<ra.stockMin)then 
+                    writeln(faltantes, ra.codProducto, ra.categoria);
 
                 seek(a,filepos(a)-1);
                 write(a,ra);
@@ -91,7 +90,7 @@ end;
 var 
     res1,res2,res3:pedidos;
     a:almacen;
-    faltantes = file of text;
+    faltantes: file of text;
 begin
     actualizarAlmacen(res1,res2,res3,a,faltantes);
 end.
