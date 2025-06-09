@@ -63,7 +63,7 @@ begin
             minimo(r1,r2,r3,res1,res2,res3,min);
         end;
         desconte:=false;
-        while(not EOF(a)) and (not desconte))do begin
+        while(not EOF(a)) and (not desconte)do begin
             read(a,ra);
             if(ra.codProducto= totPedido.codProducto)then begin
                 if(ra.stockA>=totPedido.cantPedida)then
@@ -83,7 +83,6 @@ begin
             end;
         end;
     end;
-
 end;
 
 {Programa principal}
