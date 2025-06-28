@@ -8,6 +8,7 @@ type
         cantP:integer;
     end;
     provincia=file of municipio;
+    
     mensual = Record
         codM:integer;
         cantP:integer;
