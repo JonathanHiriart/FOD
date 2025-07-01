@@ -56,6 +56,7 @@ procedure incisoAyC(var vecArc:sucursales);
 var
     vecR:vecDetalles;
     min:venta;
+    i:integer;
     nomActual:string[40];
     codigoActual,cantVendida,max,codmax,fechaActual:integer;
 begin
@@ -80,6 +81,9 @@ begin
         maxventas(cantVendida,max,codmax,codigoActual);
     end;
     writeln('el codigo con mas ventas es ', codmax);
+    for i:=1 to suc do begin
+        close(vecArc[i]);
+    end; 
 end;
 var 
     vec:sucursales;
